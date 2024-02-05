@@ -2,6 +2,8 @@ import type { NextAuthOptions } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { connectDB } from '@/utils/database';
+import User from '@/app/models/User';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -19,14 +21,34 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
-        const user = { id: '1', name: 'J Smith', email: 'jsmith@example.com' };
+        if (!credentials || !credentials.email || !credentials.password)
+          return null;
 
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
+        console.log(credentials); // TODO - remove when complete
+
+        try {
+          await connectDB();
+
+          // check if user exists
+          const dbUser = await User.findOne({
+            email: credentials.email,
+          });
+
+          //TODO - add encryption
+          //verify password
+          if (dbUser && dbUser.password === credentials.password) {
+            return dbUser;
+          }
+
+          // if not
+          if (!dbUser) {
+            console.log(`User: ${credentials.email} does not exist.`);
+          } else {
+            console.log(`Incorrect password for user: ${credentials.email}`);
+          }
+          return null;
+        } catch (error) {
+          console.log('something went wrong: ', error);
           return null;
         }
       },

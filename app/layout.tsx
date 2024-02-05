@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Toaster } from 'react-hot-toast';
 // import { getServerSession } from 'next-auth';
 // import SessionProvider from './components/provider';
 
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Note-taking Markdown Editor',
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -16,7 +17,10 @@ export default async function RootLayout({
   // const session = await getServerSession();
   return (
     <html lang='en'>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster position='top-right' />
+      </body>
     </html>
   );
 }

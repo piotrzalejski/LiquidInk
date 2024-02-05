@@ -4,8 +4,9 @@ import {
   GoogleSignInButton,
 } from '@/components/authButtons';
 import CredentialsForm from '@/components/credentialsForm';
+import { getCsrfToken } from 'next-auth/react';
 
-export default function SignInPage() {
+export default async function SignInPage() {
   return (
     <div className='flex flex-col items-center justify-center min-h-screen py-2'>
       <div className='flex flex-col items-center p-10 shadow-md'>
@@ -17,7 +18,7 @@ export default function SignInPage() {
           Or
         </span>
         {/* <CredentialsSignInButton /> */}
-        <CredentialsForm />
+        <CredentialsForm csrfToken={await getCsrfToken()} />
       </div>
     </div>
   );
