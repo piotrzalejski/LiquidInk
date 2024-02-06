@@ -1,9 +1,16 @@
-import SignInPage from './signIn/page';
+'use client';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Home() {
-  return (
-    <main>
-      <SignInPage />
-    </main>
-  );
+  const router = useRouter();
+
+  //TODO - based on session
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      router.push('/signIn');
+    }
+  }, []);
+
+  return null;
 }

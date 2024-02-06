@@ -1,5 +1,10 @@
-function Home() {
-  return <div>Home Page</div>;
-}
+import SignOutButton from '@/components/signOutButton';
 
-export default Home;
+export default function Home() {
+  return (
+    <div>
+      Home Page
+      <SignOutButton />
+    </div>
+  );
+}

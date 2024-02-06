@@ -4,6 +4,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { connectDB } from '@/utils/database';
 import User from '@/app/models/User';
+import bcrypt from 'bcrypt';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -34,9 +35,11 @@ export const authOptions: NextAuthOptions = {
             email: credentials.email,
           });
 
-          //TODO - add encryption
-          //verify password
-          if (dbUser && dbUser.password === credentials.password) {
+          if (
+            dbUser &&
+            (await bcrypt.compare(credentials.password, dbUser.password))
+          ) {
+            //console.log(`User: ${credentials.email} has been authenticated.`);
             return dbUser;
           }
 
